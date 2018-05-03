@@ -71,8 +71,8 @@ class InfoCollectionCell : UICollectionViewCell {
     @IBOutlet var pm25Title : UILabel?
     
     func configure(node: Infomation) {
-        let pm10IntValue : Int = Int(node.pm10Value)!
-        let pm25IntValue : Int = Int(node.pm25Value)!
+        let pm10IntValue : Int = Int(node.pm10Value) ?? 0
+        let pm25IntValue : Int = Int(node.pm25Value) ?? 0
         self.dataLabel?.text = "서초구 \(node.dataTime) 정보"
         self.pm10Label?.text = "미세먼지 \(node.pm10Value)㎍/㎥"
         self.pm25Label?.text = "초미세먼지 \(node.pm25Value)㎍/㎥"
@@ -179,7 +179,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         // If an error is encountered, use NCUpdateResult.Failed
         // If there's no update required, use NCUpdateResult.NoData
         // If there's an update, use NCUpdateResult.NewData
-        
+        self.location.flatMap{self.convertAddress(location: $0)}.subscribe(onNext: { (value) in self.loadStationInfo(city: value) }).disposed(by: disposeBag)
         completionHandler(NCUpdateResult.newData)
     }
     
