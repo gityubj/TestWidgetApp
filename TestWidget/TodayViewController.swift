@@ -80,39 +80,39 @@ class InfoCollectionCell : UICollectionViewCell {
 //        self.coLabel?.text = "일산화탄소 \(node.coValue)㎍/㎥"
 //        self.o3Label?.text = "오존 \(node.o3Value)㎍/㎥"
 //        self.no2Label?.text = "이산화질소 \(node.no2Value)㎍/㎥"
-        if 0 < pm10IntValue, 15 > pm10IntValue {
+        if 0 <= pm10IntValue, 15 >= pm10IntValue {
              self.pm10Title?.text = "최고"
-        } else if 16 < pm10IntValue, 30 > pm10IntValue {
+        } else if 16 <= pm10IntValue, 30 >= pm10IntValue {
              self.pm10Title?.text = "좋음"
-        } else if 31 < pm10IntValue, 40 > pm10IntValue {
+        } else if 31 <= pm10IntValue, 40 >= pm10IntValue {
              self.pm10Title?.text = "양호"
-        } else if 41 < pm10IntValue, 50 > pm10IntValue {
+        } else if 41 <= pm10IntValue, 50 >= pm10IntValue {
              self.pm10Title?.text = "보통"
-        } else if 51 < pm10IntValue, 75 > pm10IntValue {
+        } else if 51 <= pm10IntValue, 75 >= pm10IntValue {
             self.pm10Title?.text = "나쁨"
-        } else if 76 < pm10IntValue, 100 > pm10IntValue {
+        } else if 76 <= pm10IntValue, 100 >= pm10IntValue {
              self.pm10Title?.text = "상당히 나쁨"
-        } else if 101 < pm10IntValue, 150 > pm10IntValue {
+        } else if 101 <= pm10IntValue, 150 >= pm10IntValue {
             self.pm10Title?.text = "매우 나쁨"
-        } else if 151 < pm10IntValue {
+        } else if 151 <= pm10IntValue {
             self.pm10Title?.text = "최악"
         }
         
-        if 0 < pm25IntValue, 8 > pm25IntValue {
+        if 0 <= pm25IntValue, 8 >= pm25IntValue {
             self.pm25Title?.text = "최고"
-        } else if 9 < pm25IntValue, 15 > pm25IntValue {
+        } else if 9 <= pm25IntValue, 15 >= pm25IntValue {
             self.pm25Title?.text = "좋음"
-        } else if 16 < pm25IntValue, 20 > pm25IntValue {
+        } else if 16 <= pm25IntValue, 20 >= pm25IntValue {
             self.pm25Title?.text = "양호"
-        } else if 21 < pm25IntValue, 25 > pm25IntValue {
+        } else if 21 <= pm25IntValue, 25 >= pm25IntValue {
             self.pm25Title?.text = "보통"
-        } else if 26 < pm25IntValue, 37 > pm25IntValue {
+        } else if 26 <= pm25IntValue, 37 >= pm25IntValue {
             self.pm25Title?.text = "나쁨"
-        } else if 38 < pm25IntValue, 50 > pm25IntValue {
+        } else if 38 <= pm25IntValue, 50 >= pm25IntValue {
             self.pm25Title?.text = "상당히 나쁨"
-        } else if 51 < pm25IntValue, 75 > pm25IntValue {
+        } else if 51 <= pm25IntValue, 75 >= pm25IntValue {
             self.pm25Title?.text = "매우 나쁨"
-        } else if 76 < pm25IntValue {
+        } else if 76 <= pm25IntValue {
             self.pm25Title?.text = "최악"
         }
     }
@@ -145,9 +145,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         let locationObserver = self.location.distinctUntilChanged { $0.latitude == $1.latitude && $0.longitude == $1.longitude }.flatMap { self.convertAddress(location: $0) }
         
-        locationObserver.subscribe(onNext: { (value) in
-            self.loadStationInfo(city: value)
-        }).disposed(by: disposeBag)
+        locationObserver.subscribe(onNext: { (value) in self.loadStationInfo(city: value) }).disposed(by: disposeBag)
         
         self.infoArr.bind(to: collectionView.rx.items) { (collectionView, row, item) in
             let indexPath = IndexPath(row: row, section: 0)
@@ -156,16 +154,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
                 return cell
             }
             return UICollectionViewCell()}.disposed(by: disposeBag)
-        
-
-//        self.location.asObservable().map { return self.convertAddress(location: $0)}.flatMap { self.loadStationInfo(city: $0)}
-//            .bind(to: collectionView.rx.items) { (collectionView, row, item) in
-//                let indexPath = IndexPath(row: row, section: 0)
-//                if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "infoCell", for: indexPath) as? InfoCollectionCell {
-//                    cell.configure(node: item)
-//                    return cell
-//                }
-//                return UICollectionViewCell()}.disposed(by: disposeBag)
     }
     
     override func didReceiveMemoryWarning() {
@@ -187,13 +175,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         let expanded = activeDisplayMode == .expanded
         preferredContentSize = expanded ? CGSize(width: maxSize.width, height: 200) : maxSize
     }
-    
-//    func loadStationInfo(city:String) -> Observable<[Infomation]> {
-//        return TodayViewController.provider.request(.station(name: city))
-//            .filter(statusCode: 200)
-//            .map(InfoList.self)
-//            .map{ return $0.dataList }.asObservable()
-//    }
+
     func loadStationInfo(city:String) {
         let request = TodayViewController.provider.request(.station(name: city))
             .filter(statusCode: 200)
