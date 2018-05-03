@@ -143,7 +143,8 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         
         guard let collectionView = self.collectionView else { return }
         
-        let locationObserver = self.location.asObservable().map { return self.convertAddress(location: $0, completion: )}
+        let locationObserver = self.location.distinctUntilChanged { $0.latitude == $1.latitude && $0.longitude == $1.longitude }.flatMap { self.convertAddress(location: $0) }
+        
         locationObserver.subscribe(onNext: { (value) in
             self.loadStationInfo(city: value)
         }).disposed(by: disposeBag)
@@ -206,23 +207,24 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
     typealias ConvertAddressCompletion = (String) -> Void
 
-    func convertAddress(location: CLLocationCoordinate2D, completion: @escaping ConvertAddressCompletion) {
+    func convertAddress(location: CLLocationCoordinate2D) -> Observable<String> {
+        let city: BehaviorRelay<String> = BehaviorRelay<String>(value: "")
+        
         let findLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
         let geocoder = CLGeocoder()
         let locale = Locale(identifier: "ko_KR")
         if #available(iOSApplicationExtension 11.0, *) {
-            geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale) { (place, _) in
-                if let locality = place?.first?.locality {
-                    completion(locality)
-                }
+            geocoder.rx.base.reverseGeocodeLocation(findLocation, preferredLocale: locale) { (place, error) in
+                let locality = place?.first?.locality ?? ""
+                city.accept(locality)
             }
         } else {
             geocoder.reverseGeocodeLocation(findLocation) { (place, error) in
-                if let locality = place?.first?.locality {
-                    completion(locality)
-                }
+                let locality = place?.first?.locality ?? ""
+                city.accept(locality)
             }
         }
+        return city.asObservable().distinctUntilChanged()
     }
     
     @IBAction func goToApp() {
