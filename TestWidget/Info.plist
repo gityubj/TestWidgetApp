@@ -4,6 +4,8 @@
 <dict>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>현재 위치를 받아오기 위해 항상 GPS 정보가 필요합니다.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>현재 위치를 받아오기 위해 GPS 정보가 필요합니다.</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>CFBundleDevelopmentRegion</key>

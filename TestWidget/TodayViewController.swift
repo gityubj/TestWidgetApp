@@ -80,40 +80,52 @@ class InfoCollectionCell : UICollectionViewCell {
 //        self.coLabel?.text = "일산화탄소 \(node.coValue)㎍/㎥"
 //        self.o3Label?.text = "오존 \(node.o3Value)㎍/㎥"
 //        self.no2Label?.text = "이산화질소 \(node.no2Value)㎍/㎥"
-        if 0 <= pm10IntValue, 15 >= pm10IntValue {
-             self.pm10Title?.text = "최고"
-        } else if 16 <= pm10IntValue, 30 >= pm10IntValue {
-             self.pm10Title?.text = "좋음"
-        } else if 31 <= pm10IntValue, 40 >= pm10IntValue {
-             self.pm10Title?.text = "양호"
-        } else if 41 <= pm10IntValue, 50 >= pm10IntValue {
-             self.pm10Title?.text = "보통"
-        } else if 51 <= pm10IntValue, 75 >= pm10IntValue {
-            self.pm10Title?.text = "나쁨"
-        } else if 76 <= pm10IntValue, 100 >= pm10IntValue {
-             self.pm10Title?.text = "상당히 나쁨"
-        } else if 101 <= pm10IntValue, 150 >= pm10IntValue {
-            self.pm10Title?.text = "매우 나쁨"
-        } else if 151 <= pm10IntValue {
-            self.pm10Title?.text = "최악"
+        self.pm10Title?.text = pm10IntValue.pm10Title
+        self.pm25Title?.text = pm25IntValue.pm25Title
+    }
+}
+
+extension Int {
+    var pm10Title : String {
+        if 0 <= self, 15 >= self {
+            return "최고"
+        } else if 16 <= self, 30 >= self {
+            return "좋음"
+        } else if 31 <= self, 40 >= self {
+            return "양호"
+        } else if 41 <= self, 50 >= self {
+            return "보통"
+        } else if 51 <= self, 75 >= self {
+            return "나쁨"
+        } else if 76 <= self, 100 >= self {
+            return "상당히 나쁨"
+        } else if 101 <= self, 150 >= self {
+            return "매우 나쁨"
+        } else if 151 <= self {
+            return "최악"
+        } else {
+            return "측정 불가"
         }
-        
-        if 0 <= pm25IntValue, 8 >= pm25IntValue {
-            self.pm25Title?.text = "최고"
-        } else if 9 <= pm25IntValue, 15 >= pm25IntValue {
-            self.pm25Title?.text = "좋음"
-        } else if 16 <= pm25IntValue, 20 >= pm25IntValue {
-            self.pm25Title?.text = "양호"
-        } else if 21 <= pm25IntValue, 25 >= pm25IntValue {
-            self.pm25Title?.text = "보통"
-        } else if 26 <= pm25IntValue, 37 >= pm25IntValue {
-            self.pm25Title?.text = "나쁨"
-        } else if 38 <= pm25IntValue, 50 >= pm25IntValue {
-            self.pm25Title?.text = "상당히 나쁨"
-        } else if 51 <= pm25IntValue, 75 >= pm25IntValue {
-            self.pm25Title?.text = "매우 나쁨"
-        } else if 76 <= pm25IntValue {
-            self.pm25Title?.text = "최악"
+    }
+    var pm25Title : String {
+        if 0 <= self, 8 >= self {
+            return "최고"
+        } else if 9 <= self, 15 >= self {
+            return "좋음"
+        } else if 16 <= self, 20 >= self {
+            return "양호"
+        } else if 21 <= self, 25 >= self {
+            return "보통"
+        } else if 26 <= self, 37 >= self {
+            return "나쁨"
+        } else if 38 <= self, 50 >= self {
+            return "상당히 나쁨"
+        } else if 51 <= self, 75 >= self {
+            return "매우 나쁨"
+        } else if 76 <= self {
+            return "최악"
+        } else {
+            return "측정 불가"
         }
     }
 }
