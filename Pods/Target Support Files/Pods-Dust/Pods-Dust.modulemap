@@ -1,0 +1,6 @@
+framework module Pods_Dust {
+  umbrella header "Pods-Dust-umbrella.h"
+
+  export *
+  module * { export * }
+}
